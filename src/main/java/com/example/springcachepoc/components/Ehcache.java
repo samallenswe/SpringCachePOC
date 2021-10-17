@@ -1,15 +1,13 @@
-package com.example.springdatapoc.components;
+package com.example.springcachepoc.components;
 
-import com.example.springdatapoc.utils.PersonLoaderWriter;
+import com.example.springcachepoc.utils.PersonLoaderWriter;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 
-import static java.util.Collections.singletonMap;
-
-import com.example.springdatapoc.repository.Person;
-import com.example.springdatapoc.repository.PersonRepository;
-import com.example.springdatapoc.service.AsyncService;
-import com.example.springdatapoc.utils.Utils;
+import com.example.springcachepoc.repository.Person;
+import com.example.springcachepoc.repository.PersonRepository;
+import com.example.springcachepoc.service.AsyncService;
+import com.example.springcachepoc.utils.Utils;
 import java.util.concurrent.TimeUnit;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;

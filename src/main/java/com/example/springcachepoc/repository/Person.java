@@ -1,4 +1,4 @@
-package com.example.springdatapoc.repository;
+package com.example.springcachepoc.repository;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

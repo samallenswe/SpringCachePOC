@@ -1,6 +1,6 @@
-package com.example.springdatapoc.utils;
+package com.example.springcachepoc.utils;
 
-import com.example.springdatapoc.repository.Person;
+import com.example.springcachepoc.repository.Person;
 
 public class Utils {
   public static final int TEST_SIZE = 500;

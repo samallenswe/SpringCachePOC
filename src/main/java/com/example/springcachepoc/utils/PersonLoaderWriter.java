@@ -1,4 +1,4 @@
-package com.example.springdatapoc.utils;
+package com.example.springcachepoc.utils;
 
 import java.util.Collections;
 import java.util.HashMap;

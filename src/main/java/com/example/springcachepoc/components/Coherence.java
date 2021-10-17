@@ -1,20 +1,11 @@
-package com.example.springdatapoc.components;
+package com.example.springcachepoc.components;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
 
-import static com.example.springdatapoc.utils.Utils.TEST_SIZE;
-
-import com.example.springdatapoc.repository.Person;
-import com.example.springdatapoc.repository.PersonRepository;
-import com.example.springdatapoc.service.AsyncService;
-import com.example.springdatapoc.utils.Utils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-import javax.transaction.Transactional;
+import com.example.springcachepoc.repository.Person;
+import com.example.springcachepoc.repository.PersonRepository;
+import com.example.springcachepoc.service.AsyncService;
+import com.example.springcachepoc.utils.Utils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.NonNull;

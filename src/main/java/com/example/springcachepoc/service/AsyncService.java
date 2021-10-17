@@ -1,8 +1,8 @@
-package com.example.springdatapoc.service;
+package com.example.springcachepoc.service;
 
-import com.example.springdatapoc.components.DirectToDb;
-import com.example.springdatapoc.repository.Person;
-import com.example.springdatapoc.repository.PersonRepository;
+import com.example.springcachepoc.components.DirectToDb;
+import com.example.springcachepoc.repository.Person;
+import com.example.springcachepoc.repository.PersonRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
