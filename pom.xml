@@ -37,11 +37,6 @@
       <version>3.9.7</version>
     </dependency>
     <dependency>
-      <groupId>com.oracle.coherence.ce</groupId>
-      <artifactId>coherence</artifactId>
-      <version>21.06</version>
-    </dependency>
-    <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <scope>runtime</scope>

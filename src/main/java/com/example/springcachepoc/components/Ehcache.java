@@ -1,6 +1,8 @@
 package com.example.springcachepoc.components;
 
-import com.example.springcachepoc.utils.PersonLoaderWriter;
+import static com.example.springcachepoc.utils.Utils.TEST_SIZE;
+
+import java.util.logging.Logger;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 
@@ -13,12 +15,13 @@ import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.builders.WriteBehindConfigurationBuilder;
+import org.ehcache.spi.loaderwriter.CacheLoaderWriter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-@Order(3)
+@Order(2)
 @Component
 public class Ehcache implements CommandLineRunner {
   @NonNull
@@ -34,24 +37,67 @@ public class Ehcache implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    Cache<Long, String> personCache = cacheManager.createCache("personCache",
-        CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class, ResourcePoolsBuilder.heap(10))
-            .withLoaderWriter(new PersonLoaderWriter<Integer, Person>())
-            .add(WriteBehindConfigurationBuilder
-                .newBatchedWriteBehindConfiguration(1, TimeUnit.SECONDS, 3)
-                .queueSize(3)
-                .concurrencyLevel(1)
-                .enableCoalescing())
+    Cache<Long, Person> writeBehindCache = cacheManager.createCache("writeBehindCache",
+        CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, Person.class, ResourcePoolsBuilder.heap(10))
+            .withLoaderWriter(new CacheLoaderWriter<Long, Person>() {
+              @Override
+              public Person load(Long key) throws Exception {
+                Person person = repository.findById(key).get();
+                return person;
+              }
+
+              @Override
+              public void write(Long key, Person value) throws Exception {
+//                System.out.println("Current Thread: " + Thread.currentThread().getName());
+                repository.save(value);
+              }
+
+              @Override
+              public void delete(Long key) throws Exception {
+                repository.delete(repository.findById(key).get());
+              }
+            }) // <1>
+            .withService(WriteBehindConfigurationBuilder // <2>
+                .newBatchedWriteBehindConfiguration(30, TimeUnit.SECONDS, 50)// <3>
+                .queueSize(50)// <4>
+                .concurrencyLevel(5) // <5>
+                .enableCoalescing()) // <6>
             .build());
+
+    Logger log = Logger.getLogger("################################## EhCache");
+    long startTime = System.nanoTime();
+    for (long i = 1; i < TEST_SIZE; i++) {
+      Person person = Utils.createRandomPerson((int)i);
+//      System.out.println("Current Thread: " + Thread.currentThread().getName());
+//      System.out.println("Created new person: " + person);
+      writeBehindCache.put(i,person);
+    }
+
+    while(repository.count() != TEST_SIZE-1){
+      //
+    }
+    long endTime = System.nanoTime();
+    log.info("Saving all persons to DB took: " + TimeUnit.NANOSECONDS.toMillis(endTime - startTime));
+
+    try {
+      Thread.sleep(60000,0);
+    } catch(InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+
+//    for (long i = 1; i < 50; i++) {
+//      System.out.println(writeBehindCache.get(i));
+//    }
 
 //    Cache<Integer, Person> personCache =
 //        cacheManager.getCache("personCache", Integer.class, Person.class);
+//
+//    createPersons();
+//    displayPersons();
+//
+//    cacheManager.removeCache("personCache");
 
-    createPersons();
-    displayPersons();
-
-    cacheManager.removeCache("personCache");
-    cacheManager.close();
+//    cacheManager.close();
   }
 
   public void createPersons() {

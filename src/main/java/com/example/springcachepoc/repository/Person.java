@@ -1,21 +1,32 @@
 package com.example.springcachepoc.repository;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "person")
 public class Person {
 
   @Id
-  @GeneratedValue
+  @Column(name = "id")
   private Long id;
+
+  @Column(name = "firstName")
   private String firstName;
+
+  @Column(name = "lastName")
   private String lastName;
 
-  public Person(String firstName, String lastName) {
+  @Column(name = "sex")
+  private String sex;
+
+  public Person(String firstName, String lastName, String sex) {
     this.firstName = firstName;
     this.lastName = lastName;
+    this.sex = sex;
   }
 
   public Person() {
@@ -53,5 +64,13 @@ public class Person {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public String getSex() {
+    return sex;
+  }
+
+  public void setSex(String sex) {
+    this.sex = sex;
   }
 }
